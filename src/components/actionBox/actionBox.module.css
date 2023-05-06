@@ -1,0 +1,29 @@
+.actionBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.actionBoxListItem {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButton {
+  width: 2.25rem;
+  height: 2.25rem;
+
+  aspect-ratio: 1/1;
+  background-color: var(--clr-accent-400);
+  border-radius: 4px;
+}
+
+.actionButton:hover {
+  cursor: pointer;
+}
+
+.actionButton svg {
+  max-height: 100%;
+}
