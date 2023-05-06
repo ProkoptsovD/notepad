@@ -1,9 +1,11 @@
 import { ReactComponent as LogoIcon } from './logo.svg';
-import './App.css';
+import styles from './App.module.css';
 import { ActionBox } from './components/actionBox';
 import { Header } from './components/header';
 import { SearchBox } from './components/searchBox';
 import { Sidebar } from './components/sidebar';
+import { Workspace } from './components/workspace';
+import { datetimeService } from './services/datetimeService';
 
 const id1 = crypto.randomUUID();
 const id2 = crypto.randomUUID();
@@ -20,9 +22,9 @@ const SearchBoxComponent = () => <SearchBox onSearchChange={console.log} Icon={L
 
 function App() {
   return (
-    <div className="App">
+    <>
       <Header ActionBoxComponent={ActionBoxComponent} SearchBoxComponent={SearchBoxComponent} />
-      <div>
+      <div className={styles.mainScreen}>
         <Sidebar
           itemsList={[
             {
@@ -41,8 +43,18 @@ function App() {
           onItemClick={(id) => console.log(id)}
           activeItem={id2}
         />
+        <Workspace
+          {...{
+            creationDate: new Date(),
+            title: 'My note',
+            text: 'This is my first note ever',
+            id: id1
+          }}
+          onNoteChange={console.log}
+          dateFormatFn={datetimeService.format.bind(datetimeService)}
+        />
       </div>
-    </div>
+    </>
   );
 }
 

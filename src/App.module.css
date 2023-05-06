@@ -1,0 +1,4 @@
+.mainScreen {
+  display: flex;
+  flex-grow: 2;
+}

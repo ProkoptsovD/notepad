@@ -2,16 +2,17 @@
   padding: 0.5rem 0.75rem;
   background-color: inherit;
 
-  transition: 0.2s linear;
+  transition: 0.15s linear;
 }
 
 .notePreview:hover,
 .notePreview.active {
   background-color: var(--clr-base-500);
+  color: var(--clr-light-400);
 }
 
-.notePreview.active {
-  color: var(--clr-light-400);
+.notePreview:hover {
+  cursor: pointer;
 }
 
 .title {
