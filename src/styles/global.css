@@ -1,0 +1,24 @@
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--clr-base-500);
+}
+
+svg {
+  display: block;
+}
+
+.container {
+  --padding: 1rem;
+
+  width: min(100% - calc(var(--padding) * 2), 1240px);
+  margin-inline: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .container {
+    --padding: 2rem;
+  }
+}

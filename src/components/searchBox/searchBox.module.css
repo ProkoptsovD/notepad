@@ -1,0 +1,35 @@
+.searchBox {
+  position: relative;
+  display: block;
+  width: min(12.5rem, 18.75rem);
+}
+
+.searchBox svg {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+
+  aspect-ratio: 1/1;
+
+  transform: translateY(-50%);
+}
+
+.searchInput {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem 1rem 0.5rem 2rem;
+  border-radius: 4px;
+  border: 1px solid var(--clr-base-400);
+  color: var(--clr-text-400);
+}
+
+.searchInput:focus-within {
+  outline: 2px solid var(--clr-accent-400);
+}
+
+.searchInput::placeholder {
+  color: var(--clr-base-500);
+}

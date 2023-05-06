@@ -1,23 +1,23 @@
-import logo from './logo.svg';
+import { ReactComponent as LogoIcon } from './logo.svg';
 import './App.css';
+import { ActionBox } from './components/actionBox';
+import { Header } from './components/header';
+import { SearchBox } from './components/searchBox';
+
+const ActionBoxComponent = () => (
+  <ActionBox
+    actionButtonsList={[
+      { Icon: LogoIcon, onClick: () => console.log('click') },
+      { Icon: LogoIcon, onClick: () => console.log('click') }
+    ]}
+  />
+);
+const SearchBoxComponent = () => <SearchBox onSearchChange={console.log} Icon={LogoIcon} />;
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header ActionBoxComponent={ActionBoxComponent} SearchBoxComponent={SearchBoxComponent} />
     </div>
   );
 }

@@ -1,0 +1,17 @@
+.header {
+  padding: 1rem 0;
+  background-color: var(--clr-base-400);
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.actionBoxContainer,
+.searchBoxContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
