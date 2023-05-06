@@ -1,0 +1,34 @@
+.notePreview {
+  padding: 0.5rem 0.75rem;
+  background-color: inherit;
+
+  transition: 0.2s linear;
+}
+
+.notePreview:hover,
+.notePreview.active {
+  background-color: var(--clr-base-500);
+}
+
+.notePreview.active {
+  color: var(--clr-light-400);
+}
+
+.title {
+  margin-bottom: 0.5rem;
+  text-align: left;
+  font-size: inherit;
+}
+
+.dateAndTextWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.text {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
 import styles from './searchBox.module.css';
 
+/**
+ * @param {{
+ *  onSearchChange: (searchValue: string) => void;
+ *  placeholder?: string;
+ *  Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>;
+ *  [x: string]: unknown;
+ * }} props
+ * @returns JSX.Element
+ */
 export function SearchBox({ onSearchChange, placeholder, Icon, ...restProps }) {
   const [search, setSearch] = useState('');
 
