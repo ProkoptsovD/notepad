@@ -6,53 +6,41 @@ import { SearchBox } from './components/searchBox';
 import { Sidebar } from './components/sidebar';
 import { Workspace } from './components/workspace';
 import { datetimeService } from './services/datetimeService';
-
-const id1 = crypto.randomUUID();
-const id2 = crypto.randomUUID();
-
-const ActionBoxComponent = () => (
-  <ActionBox
-    actionButtonsList={[
-      { Icon: LogoIcon, onClick: () => console.log('click') },
-      { Icon: LogoIcon, onClick: () => console.log('click') }
-    ]}
-  />
-);
-const SearchBoxComponent = () => <SearchBox onSearchChange={console.log} Icon={LogoIcon} />;
+import { useNotesContext } from './contexts/NotesContext';
 
 function App() {
+  const { currentNote, createNote, getNoteById, deleteNote, notes, error } = useNotesContext();
+
+  console.log('currentNote -->', currentNote);
+
+  const ActionBoxComponent = () => (
+    <ActionBox
+      actionButtonsList={[
+        { Icon: LogoIcon, onClick: createNote },
+        { Icon: LogoIcon, onClick: deleteNote.bind(null, currentNote?.id) }
+      ]}
+    />
+  );
+  const SearchBoxComponent = () => <SearchBox onSearchChange={console.log} Icon={LogoIcon} />;
+
   return (
     <>
       <Header ActionBoxComponent={ActionBoxComponent} SearchBoxComponent={SearchBoxComponent} />
       <div className={styles.mainScreen}>
         <Sidebar
-          itemsList={[
-            {
-              creationDate: new Date(),
-              title: 'My note',
-              text: 'This is my first note ever',
-              id: id1
-            },
-            {
-              creationDate: new Date(),
-              title: 'My note',
-              text: 'This is my first note ever',
-              id: id2
-            }
-          ]}
-          onItemClick={(id) => console.log(id)}
-          activeItem={id2}
+          itemsList={notes}
+          onItemClick={getNoteById}
+          activeItem={currentNote?.id}
+          dateFormatFn={(date) =>
+            datetimeService.format(date, { dateStyle: 'short', timeStyle: 'short' })
+          }
         />
         <Workspace
-          {...{
-            creationDate: new Date(),
-            title: 'My note',
-            text: 'This is my first note ever',
-            id: id1
-          }}
-          onNoteChange={console.log}
+          onNoteChange={() => {}}
           dateFormatFn={datetimeService.format.bind(datetimeService)}
         />
+
+        {error ? <strong className={styles.error}>{error}</strong> : null}
       </div>
     </>
   );

@@ -14,22 +14,33 @@ import styles from './sidebar.module.css';
  * }} props
  * @returns JSX.Element
  */
-export function Sidebar({ itemsList, activeItem, ListItemComponent = NotePreview, onItemClick }) {
+export function Sidebar({
+  itemsList,
+  activeItem,
+  dateFormatFn,
+  ListItemComponent = NotePreview,
+  onItemClick
+}) {
+  const hasItems = itemsList?.length > 0;
+
   return (
-    <aside className={styles.sidebar}>
-      {itemsList.length ? (
+    <aside className={`${styles.sidebar} ${hasItems ? '' : styles.empty}`}>
+      {hasItems ? (
         <ul>
           {itemsList.map(({ id, ...restOfItem }) => (
             <li key={id} className={styles.listItem}>
               <ListItemComponent
                 isActive={id === activeItem}
                 onClick={onItemClick.bind(null, id)}
+                dateFormatFn={dateFormatFn}
                 {...restOfItem}
               />
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <p className={styles.notification}>Added notes will be displayed here</p>
+      )}
     </aside>
   );
 }

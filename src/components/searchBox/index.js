@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import styles from './searchBox.module.css';
 
 /**
@@ -10,7 +10,7 @@ import styles from './searchBox.module.css';
  * }} props
  * @returns JSX.Element
  */
-export function SearchBox({ onSearchChange, placeholder, Icon, ...restProps }) {
+export const SearchBox = memo(({ onSearchChange, placeholder, Icon, ...restProps }) => {
   const [search, setSearch] = useState('');
 
   const onSearchChangeCallback = useCallback(onSearchChange, [onSearchChange]);
@@ -36,4 +36,4 @@ export function SearchBox({ onSearchChange, placeholder, Icon, ...restProps }) {
       />
     </label>
   );
-}
+});
