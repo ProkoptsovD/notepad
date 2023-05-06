@@ -7,7 +7,7 @@ import styles from './workspace.module.css';
  *  creationDate: Date;
  *  text: string;
  *  id: string;
- *  onNoteChange: (note: { creationDate: Date; title: string; text: string; }) => void;
+ *  onNoteChange: (id: string; note: { id: string; creationDate: Date; title: string; text: string; }) => void;
  *  dateFormatFn: (date: Date) => string;
  * }} props
  * @returns JSX.Element
@@ -15,12 +15,12 @@ import styles from './workspace.module.css';
 export function Workspace({ title, creationDate, text, id, onNoteChange, dateFormatFn }) {
   const [noteText, setNoteText] = useState(() => text);
   const [noteTitle, setNoteTitle] = useState(() => title);
-  const tranformedDate = dateFormatFn(creationDate);
+  const tranformedDate = creationDate ? dateFormatFn(creationDate) : null;
 
   const onNoteChangeCallback = useCallback(onNoteChange, [onNoteChange]);
 
   useEffect(() => {
-    onNoteChangeCallback({ id, title: noteTitle, text: noteText, creationDate: new Date() });
+    onNoteChangeCallback(id, { id, title: noteTitle, text: noteText, creationDate: new Date() });
   }, [noteText, noteTitle, id, onNoteChangeCallback]);
 
   function handleNoteTextChange({ currentTarget }) {
@@ -33,9 +33,11 @@ export function Workspace({ title, creationDate, text, id, onNoteChange, dateFor
 
   return (
     <section className={styles.workspace}>
-      <time className={styles.date} dateTime={tranformedDate}>
-        {tranformedDate}
-      </time>
+      {tranformedDate && (
+        <time className={styles.date} dateTime={tranformedDate}>
+          {tranformedDate}
+        </time>
+      )}
       <textarea
         className={`${styles.textarea} ${styles.title}`}
         value={noteTitle}

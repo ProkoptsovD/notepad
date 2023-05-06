@@ -2,17 +2,22 @@
   max-width: 15.625rem;
   min-height: 100%;
   overflow-y: auto;
+  border-right: 1px solid var(--clr-base-600);
+}
+
+.empty {
+  width: 15.625rem;
 }
 
 .listItem {
-  border-top: 1px solid var(--clr-base-500);
-  border-bottom: 1px solid var(--clr-base-500);
-}
-
-.listItem:first-child {
-  border-top: none;
+  border-bottom: 1px solid var(--clr-base-600);
 }
 
 .listItem:last-child {
   border-bottom: none;
+}
+
+.notification {
+  padding: 1rem 0.5rem;
+  opacity: 0.5;
 }

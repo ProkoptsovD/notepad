@@ -49,7 +49,7 @@ export class IndexedDbService {
         .objectStore(this.storeName)
         .get(id);
       dbRequest.onerror = onError;
-      dbRequest.onsuccess = onSuccess;
+      dbRequest.onsuccess = () => onSuccess(dbRequest.result);
     }, onError);
   }
 
@@ -82,7 +82,7 @@ export class IndexedDbService {
    *  transform: (record: unknown) => record;
    * }} params
    */
-  updateRecprd({ id, onSuccess, transform, onError = this.logerr }) {
+  updateRecord({ id, onSuccess, transform, onError = this.logerr }) {
     if (!id) this.throwError('Id is mandatory');
     if (!onSuccess) this.throwError('onSuccess callback is mandatory');
     if (!transform) this.throwError('transform callback is mandatory');
