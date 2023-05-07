@@ -7,7 +7,7 @@
   position: fixed;
   text-align: center;
   inset: 0 0 auto 0;
-  background-color: #b81a1a;
+  background-color: var(--clr-danger);
   color: var(--clr-light-400);
   padding: 0.5rem 0;
   opacity: 0;

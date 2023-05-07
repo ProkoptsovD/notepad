@@ -1,4 +1,5 @@
 .workspace {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex-grow: 2;
@@ -11,6 +12,13 @@
   padding-bottom: 0.5rem;
   text-align: center;
   color: var(--clr-base-400);
+  min-height: 2.5rem;
+}
+
+.datetimePlaceholder {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  min-height: 2.5rem;
 }
 
 .textarea {
@@ -44,4 +52,33 @@
 .text {
   height: 100%;
   padding: 0 0.25rem 0.25rem 0.5rem;
+}
+
+.modeBadge {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.25rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  min-width: 6rem;
+  text-align: center;
+
+  color: var(--clr-light-400);
+}
+.modeBadge.readonly {
+  background-color: var(--clr-danger);
+}
+.modeBadge.edit {
+  background-color: var(--clr-success);
+}
+
+.autoSaveBadge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  color: var(--clr-success);
+  font-weight: 400;
+  font-size: 0.85rem;
 }

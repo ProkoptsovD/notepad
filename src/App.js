@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import { ReactComponent as PlusIcon } from './assets/plus.svg';
 import { ReactComponent as EditIcon } from './assets/edit.svg';
 import { ReactComponent as TrashIcon } from './assets/trash.svg';
@@ -11,7 +12,6 @@ import { Workspace } from './components/workspace';
 import { datetimeService } from './services/datetimeService';
 import { useNotesContext } from './contexts/NotesContext';
 import styles from './App.module.css';
-import { useState } from 'react';
 
 function App() {
   const {
@@ -21,6 +21,8 @@ function App() {
     selectedNoteId,
     getNoteById,
     deleteNote,
+    autoSaveNote,
+    isNoteSaved,
     notes,
     error
   } = useNotesContext();
@@ -32,25 +34,38 @@ function App() {
       actionButtonsList={[
         { Icon: PlusIcon, onClick: createNote },
         { Icon: EditIcon, onClick: editButtonClickHandler, disabled: !selectedNoteId },
-        { Icon: TrashIcon, onClick: deleteButtonClickHandler, disabled: !selectedNoteId }
+        {
+          Icon: TrashIcon,
+          onClick: deleteButtonClickHandler.bind(null, selectedNoteId),
+          disabled: !selectedNoteId
+        }
       ]}
     />
   );
-  const SearchBoxComponent = () => <SearchBox onSearchChange={console.log} Icon={SearchIcon} />;
+  const SearchBoxComponent = useCallback(
+    () => <SearchBox onSearchChange={console.log} Icon={SearchIcon} />,
+    []
+  );
 
-  function editButtonClickHandler() {
-    getNoteById(selectedNoteId);
+  const editButtonClickHandler = useCallback(() => {
     setEditMode(true);
-  }
+  }, []);
 
-  function deleteButtonClickHandler() {
-    deleteNote(selectedNoteId);
-    setEditMode(false);
-  }
+  const deleteButtonClickHandler = useCallback(
+    (id) => {
+      deleteNote(id);
+      setEditMode(false);
+    },
+    [deleteNote]
+  );
 
   function sidebarItemClickHandler(id) {
-    setSelectedNoteId(id);
-    setEditMode(false);
+    if (id !== selectedNoteId) {
+      setSelectedNoteId(id);
+      getNoteById(id);
+    }
+
+    if (editMode) setEditMode(false);
   }
 
   return (
@@ -64,11 +79,12 @@ function App() {
           dateFormatFn={(date) => datetimeService.format(date, { dateStyle: 'short' })}
         />
         <Workspace
-          onNoteChange={() => {}}
+          onNoteChange={autoSaveNote}
+          editMode={editMode}
+          isSaved={isNoteSaved}
           dateFormatFn={(date) =>
             datetimeService.format(date, { dateStyle: 'full', timeStyle: 'medium' })
           }
-          editMode={editMode}
           {...note}
         />
 

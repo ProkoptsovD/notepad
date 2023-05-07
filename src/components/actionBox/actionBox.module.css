@@ -37,5 +37,5 @@
 }
 
 .actionButton:not(:disabled):hover svg {
-  fill: #0fc637;
+  fill: var(--clr-success);
 }

@@ -1,12 +1,8 @@
 .sidebar {
-  max-width: 15.625rem;
+  width: 15.625rem;
   min-height: 100%;
   overflow-y: auto;
   border-right: 1px solid var(--clr-base-600);
-}
-
-.empty {
-  width: 15.625rem;
 }
 
 .listItem {

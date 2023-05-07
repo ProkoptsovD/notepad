@@ -24,7 +24,7 @@ export function Sidebar({
   const hasItems = itemsList?.length > 0;
 
   return (
-    <aside className={`${styles.sidebar} ${hasItems ? '' : styles.empty}`}>
+    <aside className={styles.sidebar}>
       {hasItems ? (
         <ul>
           {itemsList.map(({ id, ...restOfItem }) => (
