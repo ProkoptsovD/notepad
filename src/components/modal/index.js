@@ -6,7 +6,7 @@ import styles from './modal.module.css';
  *  onConfirm: () => void;
  *  onCancel: () => void;
  * }} props
- * @returns
+ * @returns JSX.Element
  */
 export function Modal({ text = 'Default text', onConfirm, onCancel }) {
   return (
