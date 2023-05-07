@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import { ReactComponent as PlusIcon } from './assets/plus.svg';
 import { ReactComponent as EditIcon } from './assets/edit.svg';
@@ -30,7 +30,19 @@ function App() {
     error
   } = useNotesContext();
   const [editMode, setEditMode] = useState(false);
+  const [search, setSearch] = useState('');
   const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState(false);
+
+  const filteredNotes = useMemo(() => {
+    const filtered = notes.filter(
+      (note) =>
+        note['text'].toLowerCase().includes(search.toLowerCase()) ||
+        note['title'].toLowerCase().includes(search.toLowerCase())
+    );
+
+    return filtered;
+  }, [search, notes]);
+
   const note = currentNote ?? {};
 
   const ActionBoxComponent = () => (
@@ -46,8 +58,9 @@ function App() {
       ]}
     />
   );
+
   const SearchBoxComponent = useCallback(
-    () => <SearchBox onSearchChange={console.log} Icon={SearchIcon} />,
+    () => <SearchBox onSearchChange={setSearch} Icon={SearchIcon} />,
     []
   );
 
@@ -78,7 +91,7 @@ function App() {
       <Header ActionBoxComponent={ActionBoxComponent} SearchBoxComponent={SearchBoxComponent} />
       <div className={styles.mainScreen}>
         <Sidebar
-          itemsList={notes}
+          itemsList={filteredNotes}
           onItemClick={sidebarItemClickHandler}
           activeItem={selectedNoteId}
           dateFormatFn={(date) => datetimeService.format(date, { dateStyle: 'short' })}
