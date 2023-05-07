@@ -9,4 +9,8 @@
   --clr-neutral-500: #c3c3c3;
   --clr-neutral-600: #929292;
   --clr-light-400: #ffffff;
+
+  --clr-warning: #eeee39;
+  --clr-danger: #b81a1a;
+  --clr-success: #0fc637;
 }

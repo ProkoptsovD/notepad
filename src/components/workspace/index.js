@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './workspace.module.css';
 
 /**
@@ -10,6 +10,9 @@ import styles from './workspace.module.css';
  *  onNoteChange: (id: string; note: { id: string; creationDate: Date; title: string; text: string; }) => void;
  *  dateFormatFn: (date: Date) => string;
  *  editMode: boolean;
+ *  isSaved: boolean;
+ *  SavedBadgeComponent: React.FunctionComponent<{}>
+ *  ModeBadgeComponent: React.FunctionComponent<{}>
  * }} props
  * @returns JSX.Element
  */
@@ -19,34 +22,54 @@ export function Workspace({
   text,
   id,
   editMode = false,
+  isSaved,
   onNoteChange,
-  dateFormatFn
+  dateFormatFn,
+  ModeBadgeComponent = ModeBadge,
+  SavedBadgeComponent = SavedBadge
 }) {
-  const [noteText, setNoteText] = useState(() => text);
-  const [noteTitle, setNoteTitle] = useState(() => title);
+  const [noteText, setNoteText] = useState(text);
+  const [noteTitle, setNoteTitle] = useState(title);
+  const [showSavedBadge, setShowSavedBadge] = useState(false);
+  const timoutId = useRef();
   const tranformedDate = creationDate ? dateFormatFn(creationDate) : null;
 
-  const onNoteChangeCallback = useCallback(onNoteChange, [onNoteChange]);
+  useEffect(() => {
+    setNoteText(text);
+    setNoteTitle(title);
+  }, [text, title]);
 
   useEffect(() => {
-    onNoteChangeCallback(id, { id, title: noteTitle, text: noteText, creationDate: new Date() });
-  }, [noteText, noteTitle, id, onNoteChangeCallback]);
+    if (isSaved) {
+      setShowSavedBadge(true);
+      clearTimeout(timoutId.current);
 
-  function handleNoteTextChange({ currentTarget }) {
-    setNoteText(currentTarget.value);
-  }
+      timoutId.current = setTimeout(() => {
+        setShowSavedBadge(false);
+      }, 1000);
+    }
+  }, [isSaved]);
 
   function handleNoteTitleChange({ currentTarget }) {
     setNoteTitle(currentTarget.value);
+    onNoteChange(id, { id, title: currentTarget.value, text: noteText, creationDate: new Date() });
+  }
+
+  function handleNoteTextChange({ currentTarget }) {
+    setNoteText(currentTarget.value);
+    onNoteChange(id, { id, title: noteTitle, text: currentTarget.value, creationDate: new Date() });
   }
 
   return (
     <section className={styles.workspace}>
-      {tranformedDate && (
+      {tranformedDate ? (
         <time className={styles.date} dateTime={tranformedDate}>
           {tranformedDate}
         </time>
+      ) : (
+        <div className={styles.datetimePlaceholder}></div>
       )}
+
       <textarea
         className={`${styles.textarea} ${styles.title}`}
         value={noteTitle}
@@ -62,6 +85,37 @@ export function Workspace({
         placeholder="Type in note text..."
         readOnly={!editMode}
       />
+
+      <ModeBadgeComponent editMode={editMode} />
+
+      {showSavedBadge ? <SavedBadgeComponent /> : null}
     </section>
+  );
+}
+
+/**
+ * @param {{ editMode: boolean }} props
+ * @returns JSX.Element
+ */
+function ModeBadge({ editMode, ...props }) {
+  return (
+    <strong
+      className={`${styles.modeBadge} ${editMode ? styles.edit : styles.readonly}`}
+      {...props}
+    >
+      {editMode ? 'Edit mode' : 'Read only mode'}
+    </strong>
+  );
+}
+
+/**
+ * @param {{ [x: string]: unknown }} props
+ * @returns JSX.Element
+ */
+function SavedBadge(props) {
+  return (
+    <strong className={styles.autoSaveBadge} {...props}>
+      &#10003; Saved...
+    </strong>
   );
 }
