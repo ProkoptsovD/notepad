@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+
 import { ReactComponent as PlusIcon } from './assets/plus.svg';
 import { ReactComponent as EditIcon } from './assets/edit.svg';
 import { ReactComponent as TrashIcon } from './assets/trash.svg';
@@ -9,6 +10,8 @@ import { Header } from './components/header';
 import { SearchBox } from './components/searchBox';
 import { Sidebar } from './components/sidebar';
 import { Workspace } from './components/workspace';
+import { Modal } from './components/modal';
+
 import { datetimeService } from './services/datetimeService';
 import { useNotesContext } from './contexts/NotesContext';
 import styles from './App.module.css';
@@ -27,6 +30,7 @@ function App() {
     error
   } = useNotesContext();
   const [editMode, setEditMode] = useState(false);
+  const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState(false);
   const note = currentNote ?? {};
 
   const ActionBoxComponent = () => (
@@ -36,7 +40,7 @@ function App() {
         { Icon: EditIcon, onClick: editButtonClickHandler, disabled: !selectedNoteId },
         {
           Icon: TrashIcon,
-          onClick: deleteButtonClickHandler.bind(null, selectedNoteId),
+          onClick: setOpenDeleteConfirmationModal.bind(null, true),
           disabled: !selectedNoteId
         }
       ]}
@@ -55,6 +59,7 @@ function App() {
     (id) => {
       deleteNote(id);
       setEditMode(false);
+      setOpenDeleteConfirmationModal(false);
     },
     [deleteNote]
   );
@@ -90,6 +95,14 @@ function App() {
 
         {error ? <strong className={styles.error}>{error}</strong> : null}
       </div>
+
+      {openDeleteConfirmationModal ? (
+        <Modal
+          text="This can't be undone. Do you still want to delete this note"
+          onConfirm={deleteButtonClickHandler.bind(null, selectedNoteId)}
+          onCancel={setOpenDeleteConfirmationModal.bind(null, false)}
+        />
+      ) : null}
     </>
   );
 }
