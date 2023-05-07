@@ -1,0 +1,57 @@
+.backdrop {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  inset: 0;
+  background-color: var(--clr-neutral-transparent-400);
+}
+
+.modal {
+  width: clamp(200px, 100%, 300px);
+  padding: 1.5rem 1rem;
+  background-color: var(--clr-light-400);
+  border-radius: 8px;
+
+  box-shadow: var(--clr-neutral-500) 0px 3px 13px 0px;
+}
+
+.text {
+  display: block;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--clr-danger);
+}
+
+.buttonsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.button {
+  min-width: 30%;
+  font-weight: 700;
+
+  padding: 0.5rem;
+  border: 1px solid;
+  border-color: var(--clr-base-500);
+  border-radius: 8px;
+
+  transition: 0.2s linear;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.button.confirm:hover {
+  color: var(--clr-danger);
+  border-color: var(--clr-danger);
+}
+.button.cancel:hover {
+  color: var(--clr-success);
+  border-color: var(--clr-success);
+}

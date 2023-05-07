@@ -1,4 +1,5 @@
 import React from 'react';
+
 import styles from './actionBox.module.css';
 
 /**
@@ -8,9 +9,9 @@ import styles from './actionBox.module.css';
  *    onClick: () => void;
  *    disabled: boolean;
  *  }>;
- *  ButtonComponent: React.FunctionComponent<{onClick: () => void; children: React.Node; [x: string]: unknown}>
+ *  ButtonComponent: React.FunctionComponent<{onClick: () => void; children: any; [x: string]: unknown;}>
  * }} params
- * @returns
+ * @returns JSX.Element
  */
 export function ActionBox({ actionButtonsList = [], ButtonComponent = ActionButton }) {
   return (
@@ -26,6 +27,14 @@ export function ActionBox({ actionButtonsList = [], ButtonComponent = ActionButt
   );
 }
 
+/**
+ * @param {{
+ *  onClick: () => void;
+ *  children: any;
+ *  [x: string]: unknown;
+ * }} props
+ * @returns JSX.Element
+ */
 function ActionButton({ onClick, children, ...restProps }) {
   return (
     <button type="button" className={styles.actionButton} onClick={onClick} {...restProps}>
