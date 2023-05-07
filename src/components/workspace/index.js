@@ -9,10 +9,19 @@ import styles from './workspace.module.css';
  *  id: string;
  *  onNoteChange: (id: string; note: { id: string; creationDate: Date; title: string; text: string; }) => void;
  *  dateFormatFn: (date: Date) => string;
+ *  editMode: boolean;
  * }} props
  * @returns JSX.Element
  */
-export function Workspace({ title, creationDate, text, id, onNoteChange, dateFormatFn }) {
+export function Workspace({
+  title,
+  creationDate,
+  text,
+  id,
+  editMode = false,
+  onNoteChange,
+  dateFormatFn
+}) {
   const [noteText, setNoteText] = useState(() => text);
   const [noteTitle, setNoteTitle] = useState(() => title);
   const tranformedDate = creationDate ? dateFormatFn(creationDate) : null;
@@ -43,6 +52,7 @@ export function Workspace({ title, creationDate, text, id, onNoteChange, dateFor
         value={noteTitle}
         onChange={handleNoteTitleChange}
         placeholder="Type in note title..."
+        readOnly={!editMode}
       />
 
       <textarea
@@ -50,6 +60,7 @@ export function Workspace({ title, creationDate, text, id, onNoteChange, dateFor
         value={noteText}
         onChange={handleNoteTextChange}
         placeholder="Type in note text..."
+        readOnly={!editMode}
       />
     </section>
   );

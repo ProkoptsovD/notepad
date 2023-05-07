@@ -3,6 +3,7 @@
   flex-direction: column;
   flex-grow: 2;
   padding-inline: 0.5rem;
+  background-color: var(--clr-neutral-400);
 }
 
 .date {
@@ -19,8 +20,12 @@
   border-radius: 4px;
 }
 
-.textarea:not(:focus-within):hover {
+.textarea:not(:focus-within):not(:read-only):hover {
   cursor: pointer;
+}
+
+.textarea:read-only:hover {
+  cursor: default;
 }
 
 .textarea:focus-within {
@@ -34,10 +39,6 @@
   padding: 0.75rem 0.25rem 0.25rem 0.5rem;
   margin-bottom: 1rem;
   font-weight: 700;
-}
-
-.title:focus-within {
-  outline: 1px solid var(--clr-base-500);
 }
 
 .text {

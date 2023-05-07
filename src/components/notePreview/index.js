@@ -22,7 +22,7 @@ export function NotePreview({ title, text, creationDate, isActive, onClick, date
         <time className={styles.creationDate} dateTime={dateTime}>
           {dateTime}
         </time>
-        <p className={styles.text}>{text}</p>
+        <p className={styles.text}>{text || 'Empty note'}</p>
       </div>
     </article>
   );
