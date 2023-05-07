@@ -10,6 +10,7 @@ export const NotesContextProvider = ({ children }) => {
   const [currentNote, setCurrentNote] = useState(null);
   const [notes, setNotes] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedNoteId, setSelectedNoteId] = useState(null);
 
   const onDbError = () => setError('Something went wrong...');
 
@@ -20,15 +21,17 @@ export const NotesContextProvider = ({ children }) => {
     });
   }, []);
 
-  const getNoteById = (id) => {
+  const getNoteById = useCallback((id) => {
+    if (!id) return;
+
     indexedDbService.getRecord({
       id,
       onSuccess: setCurrentNote,
       onError: onDbError
     });
-  };
+  }, []);
 
-  const createNote = () => {
+  const createNote = useCallback(() => {
     const note = { id: crypto.randomUUID(), creationDate: new Date(), title: '', text: '' };
 
     indexedDbService.addRecord({
@@ -36,24 +39,37 @@ export const NotesContextProvider = ({ children }) => {
       onSuccess: getAllNotes,
       onError: onDbError
     });
-  };
+  }, [getAllNotes]);
 
-  const updateNote = (id, newNote) => {
-    indexedDbService.updateRecord({
-      id,
-      transform: (note) => ({ ...note, ...newNote }),
-      onSuccess: () => {},
-      onError: onDbError
-    });
-  };
+  const updateNote = useCallback(
+    (id, newNote) => {
+      if (!id || !newNote) return;
 
-  const deleteNote = (id) => {
-    indexedDbService.deleteRecord({
-      id,
-      onSuccess: getAllNotes,
-      onError: onDbError
-    });
-  };
+      indexedDbService.updateRecord({
+        id,
+        transform: (note) => ({ ...note, ...newNote }),
+        onSuccess: getAllNotes,
+        onError: onDbError
+      });
+    },
+    [getAllNotes]
+  );
+
+  const deleteNote = useCallback(
+    (id) => {
+      if (!id) return;
+
+      indexedDbService.deleteRecord({
+        id,
+        onSuccess: () => {
+          setSelectedNoteId(null);
+          getAllNotes();
+        },
+        onError: onDbError
+      });
+    },
+    [getAllNotes]
+  );
 
   useEffect(() => {
     getAllNotes();
@@ -73,6 +89,8 @@ export const NotesContextProvider = ({ children }) => {
     createNote,
     deleteNote,
     updateNote,
+    setSelectedNoteId,
+    selectedNoteId,
     currentNote,
     notes,
     error

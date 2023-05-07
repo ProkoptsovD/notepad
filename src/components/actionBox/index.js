@@ -6,6 +6,7 @@ import styles from './actionBox.module.css';
  *  actionButtonsList: Array<{
  *    Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>;
  *    onClick: () => void;
+ *    disabled: boolean;
  *  }>;
  *  ButtonComponent: React.FunctionComponent<{onClick: () => void; children: React.Node; [x: string]: unknown}>
  * }} params
@@ -14,9 +15,9 @@ import styles from './actionBox.module.css';
 export function ActionBox({ actionButtonsList = [], ButtonComponent = ActionButton }) {
   return (
     <ul className={styles.actionBox}>
-      {actionButtonsList.map(({ Icon, onClick }, idx) => (
+      {actionButtonsList.map(({ Icon, onClick, disabled }, idx) => (
         <li key={idx} className={styles.actionBoxListItem}>
-          <ButtonComponent onClick={onClick}>
+          <ButtonComponent onClick={onClick} disabled={disabled}>
             <Icon />
           </ButtonComponent>
         </li>
