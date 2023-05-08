@@ -77,8 +77,22 @@
 .autoSaveBadge {
   position: absolute;
   top: 0.5rem;
-  left: 0.5rem;
   color: var(--clr-success);
   font-weight: 400;
   font-size: 0.85rem;
+}
+
+.autoSaveBadge.left {
+  left: 0.5rem;
+}
+
+.autoSaveBadge.right {
+  right: 0.5rem;
+}
+
+.backlink {
+  position: absolute;
+  top: 0.5rem;
+  left: 1rem;
+  font-size: 1.25rem;
 }

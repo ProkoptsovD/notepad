@@ -3,6 +3,12 @@
   flex-grow: 2;
 }
 
+@media screen and (max-width: 767px) {
+  .mainScreen {
+    flex-direction: column;
+  }
+}
+
 .error {
   position: fixed;
   text-align: center;
