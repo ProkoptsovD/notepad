@@ -14,6 +14,7 @@ import { Modal } from './components/modal';
 
 import { datetimeService } from './services/datetimeService';
 import { useNotesContext } from './contexts/NotesContext';
+import { useMediaQuery } from './hooks/useMediaQuery';
 import styles from './App.module.css';
 
 function App() {
@@ -32,7 +33,14 @@ function App() {
   const [editMode, setEditMode] = useState(false);
   const [search, setSearch] = useState('');
   const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState(false);
+  const [openWorkspace, setOpenWorkspace] = useState(false);
+  const isMobileScreen = useMediaQuery('(max-width: 767px)');
+  const note = currentNote ?? {};
 
+  /**
+   * filter notes by search value
+   * both in title and text fields
+   */
   const filteredNotes = useMemo(() => {
     const filtered = notes.filter(
       (note) =>
@@ -43,38 +51,22 @@ function App() {
     return filtered;
   }, [search, notes]);
 
-  const note = currentNote ?? {};
-
-  const ActionBoxComponent = () => (
-    <ActionBox
-      actionButtonsList={[
-        { Icon: PlusIcon, onClick: createNote },
-        { Icon: EditIcon, onClick: editButtonClickHandler, disabled: !selectedNoteId },
-        {
-          Icon: TrashIcon,
-          onClick: setOpenDeleteConfirmationModal.bind(null, true),
-          disabled: !selectedNoteId
-        }
-      ]}
-    />
-  );
-
-  const SearchBoxComponent = useCallback(
-    () => <SearchBox onSearchChange={setSearch} Icon={SearchIcon} />,
-    []
-  );
-
+  /** HANDLERS  */
   const editButtonClickHandler = useCallback(() => {
     setEditMode(true);
-  }, []);
+
+    if (isMobileScreen) setOpenWorkspace(true);
+  }, [isMobileScreen]);
 
   const deleteButtonClickHandler = useCallback(
     (id) => {
       deleteNote(id);
       setEditMode(false);
       setOpenDeleteConfirmationModal(false);
+
+      if (isMobileScreen) setOpenWorkspace(false);
     },
-    [deleteNote]
+    [deleteNote, isMobileScreen]
   );
 
   function sidebarItemClickHandler(id) {
@@ -86,28 +78,73 @@ function App() {
     if (editMode) setEditMode(false);
   }
 
+  const ActionBoxComponent = useCallback(() => {
+    const actionButtonsList = [
+      { Icon: PlusIcon, onClick: createNote, disabled: isMobileScreen && editMode },
+      { Icon: EditIcon, onClick: editButtonClickHandler, disabled: !selectedNoteId },
+      {
+        Icon: TrashIcon,
+        onClick: setOpenDeleteConfirmationModal.bind(null, true),
+        disabled: !selectedNoteId
+      }
+    ];
+
+    return <ActionBox actionButtonsList={actionButtonsList} />;
+  }, [createNote, editButtonClickHandler, selectedNoteId, editMode, isMobileScreen]);
+
+  const SearchBoxComponent = useCallback(
+    () => <SearchBox onSearchChange={setSearch} Icon={SearchIcon} />,
+    []
+  );
+
   return (
     <>
       <Header ActionBoxComponent={ActionBoxComponent} SearchBoxComponent={SearchBoxComponent} />
-      <div className={styles.mainScreen}>
-        <Sidebar
-          itemsList={filteredNotes}
-          onItemClick={sidebarItemClickHandler}
-          activeItem={selectedNoteId}
-          dateFormatFn={(date) => datetimeService.format(date, { dateStyle: 'short' })}
-        />
-        <Workspace
-          onNoteChange={autoSaveNote}
-          editMode={editMode}
-          isSaved={isNoteSaved}
-          dateFormatFn={(date) =>
-            datetimeService.format(date, { dateStyle: 'full', timeStyle: 'medium' })
-          }
-          {...note}
-        />
+
+      <main className={styles.mainScreen}>
+        {!isMobileScreen ? (
+          <>
+            <Sidebar
+              itemsList={filteredNotes}
+              onItemClick={sidebarItemClickHandler}
+              activeItem={selectedNoteId}
+              dateFormatFn={(date) => datetimeService.format(date, { dateStyle: 'short' })}
+            />
+            <Workspace
+              onNoteChange={autoSaveNote}
+              editMode={editMode}
+              isSaved={isNoteSaved}
+              dateFormatFn={(date) =>
+                datetimeService.format(date, { dateStyle: 'full', timeStyle: 'medium' })
+              }
+              {...note}
+            />
+          </>
+        ) : !openWorkspace ? (
+          <Sidebar
+            itemsList={filteredNotes}
+            onItemClick={sidebarItemClickHandler}
+            activeItem={selectedNoteId}
+            dateFormatFn={(date) => datetimeService.format(date, { dateStyle: 'short' })}
+          />
+        ) : (
+          <Workspace
+            onNoteChange={autoSaveNote}
+            editMode={editMode}
+            isSaved={isNoteSaved}
+            showEditBadge={false}
+            showBacklink
+            savedBadgePosition="right"
+            onBacklinkClick={setOpenWorkspace.bind(null, false)}
+            dateFormatFn={(date) =>
+              datetimeService.format(date, { dateStyle: 'full', timeStyle: 'medium' })
+            }
+            {...note}
+          />
+        )}
 
         {error ? <strong className={styles.error}>{error}</strong> : null}
-      </div>
+      </main>
 
       {openDeleteConfirmationModal ? (
         <Modal

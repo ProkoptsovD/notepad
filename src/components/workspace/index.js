@@ -11,8 +11,13 @@ import styles from './workspace.module.css';
  *  dateFormatFn: (date: Date) => string;
  *  editMode: boolean;
  *  isSaved: boolean;
+ *  showEditBadge: boolean;
+ *  showBacklink: boolean;
+ *  savedBadgePosition: 'left' | 'right';
+ *  onBacklinkClick: () => void;
  *  SavedBadgeComponent: React.FunctionComponent<{}>
  *  ModeBadgeComponent: React.FunctionComponent<{}>
+ *  BacklinkComponent: React.FunctionComponent<{}>
  * }} props
  * @returns JSX.Element
  */
@@ -23,10 +28,15 @@ export function Workspace({
   id,
   editMode = false,
   isSaved,
+  showEditBadge = true,
+  showBacklink = false,
+  savedBadgePosition,
   onNoteChange,
   dateFormatFn,
+  onBacklinkClick,
   ModeBadgeComponent = ModeBadge,
-  SavedBadgeComponent = SavedBadge
+  SavedBadgeComponent = SavedBadge,
+  BacklinkComponent = Backlink
 }) {
   const [noteText, setNoteText] = useState(text);
   const [noteTitle, setNoteTitle] = useState(title);
@@ -86,9 +96,9 @@ export function Workspace({
         readOnly={!editMode}
       />
 
-      <ModeBadgeComponent editMode={editMode} />
-
-      {showSavedBadge ? <SavedBadgeComponent /> : null}
+      {showEditBadge ? <ModeBadgeComponent editMode={editMode} /> : null}
+      {showSavedBadge ? <SavedBadgeComponent position={savedBadgePosition} /> : null}
+      {showBacklink ? <BacklinkComponent onClick={onBacklinkClick} /> : null}
     </section>
   );
 }
@@ -109,13 +119,27 @@ function ModeBadge({ editMode, ...props }) {
 }
 
 /**
- * @param {{ [x: string]: unknown }} props
+ * @param {{ position: 'left' | 'right'; [x: string]: unknown }} props
  * @returns JSX.Element
  */
-function SavedBadge(props) {
+function SavedBadge({ position = 'left', ...props }) {
+  const positionClassName = position === 'left' ? styles.left : styles.right;
+
   return (
-    <strong className={styles.autoSaveBadge} {...props}>
+    <strong className={`${styles.autoSaveBadge} ${positionClassName}`} {...props}>
       &#10003; Saved...
     </strong>
+  );
+}
+
+/**
+ * @param {{ onClick: () => void; [x: string]: unknown }} props
+ * @returns JSX.Element
+ */
+function Backlink({ onClick = () => {}, ...restProps }) {
+  return (
+    <button type="button" className={styles.backlink} onClick={onClick} {...restProps}>
+      &#8617;
+    </button>
   );
 }

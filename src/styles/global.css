@@ -22,7 +22,7 @@ svg {
 .container {
   --padding: 1rem;
 
-  width: min(100% - calc(var(--padding) * 2), 1240px);
+  width: min(100% - calc(var(--padding) * 2), 1440px);
   margin-inline: auto;
 }
 
